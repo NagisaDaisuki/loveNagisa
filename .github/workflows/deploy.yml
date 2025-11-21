@@ -53,3 +53,16 @@ jobs:
           branch: pages # 部署到pages分支
           folder: dist # Astro默认构建输出目录
           clean: true # 清理目标分支中的旧文件
+      - name: Deploy to Tencent Server
+        uses: easingthemes/ssh-deploy@4.1.8
+        env:
+          # 读取刚才在 Settings 里填的密钥
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: "-rltgoDzv0 --delete"
+          # 源目录：
+          source: "dist/"
+          REMOTE_HOST: ${{ secrets.SERVER_IP }}
+          REMOTE_USER: ${{ secrets.SERVER_USER }}
+          # 目标目录
+          TARGET: "/www/wwwroot/love.nagisadaisuki.icu/"
+          EXCLUDE: "/node_modules/"

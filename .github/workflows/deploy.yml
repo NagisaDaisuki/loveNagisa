@@ -64,5 +64,5 @@ jobs:
           REMOTE_HOST: ${{ secrets.SERVER_IP }}
           REMOTE_USER: ${{ secrets.SERVER_USER }}
           # 目标目录
-          TARGET: "/www/wwwroot/love.nagisadaisuki.icu/"
+          TARGET: "/www/wwwroot/nagisadaisuki.icu/"
           EXCLUDE: "/node_modules/, .user.ini"

@@ -19,7 +19,7 @@ export const devicesData: DeviceCategory = {
   Samsung: [
     {
       name: "Samsung Galaxy ZFold3",
-      images: "/images/device/galaxy_zfold3.png",
+      image: "/images/device/GalaxyZfold3.png",
       specs: "Black / 12G + 512GB",
       description: "Asshole Snapdragon 888, Heat like hell, 25W slowly Charging.",
       link: "https://www.samsung.com/hk/smartphones/galaxy-z-fold3-5g/specs/?srsltid=AfmBOorHVLqA7KHjF39NOvQvKUbtMyhE5-8alvAC51mqk-lziavMkDbf",
@@ -27,7 +27,7 @@ export const devicesData: DeviceCategory = {
 
     {
       name: "Samsung Galaxy S20",
-      images: "/images/device/galaxy_s20.png",
+      image: "/images/device/GalaxyS20.png",
       specs: "Gray / 12G + 128GB",
       description: "Unparalleled feel on 6.2 inch, Flagship performance Snapdragon 865, 25w slowly Charging.",
       link: "https://www.samsung.com/hk/support/useful-guide-to-use-galaxy-s20-series/?srsltid=AfmBOorClvhXZ_RCKSZW74rnfRGd-iPy8DcSauB1xBtduW4l3e5IZY3LlG",

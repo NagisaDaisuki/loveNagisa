@@ -1,7 +1,7 @@
 ---
 title: Useful FFmpeg commands
 published: 2025-09-02
-description: "Was is a cat i saw!?"
+description: "Was it a cat i saw!?"
 category: FFmpeg 
 tags: ["FFmpeg", "ffmpeg", "video", "audio", "tools"]
 author: Akeboshi Himari

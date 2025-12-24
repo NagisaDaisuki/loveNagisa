@@ -5,7 +5,7 @@
   <link href="https://love.nagisadaisuki.icu/" rel="alternate" type="text/html"/>
   <link href="https://love.nagisadaisuki.icu/atom.xml" rel="self" type="application/atom+xml"/>
   <id>https://love.nagisadaisuki.icu/</id>
-  <updated>2025-12-11T12:57:10.992Z</updated>
+  <updated>2025-12-24T06:43:31.840Z</updated>
   <language>en</language>
   <entry>
     <title>Markdown Tutorial</title>
@@ -925,24 +925,23 @@ int *const pci;
 <hr />
 <p>在 C 语言中，“指向整型的常量指针”和“指向常量整型的指针”是两个非常常见的概念，它们在语法和使用上有所不同。下面我会分别讲解这两者的含义：</p>
 <ol>
-<li>指向整型的常量指针（const int<em>ptr 或 int const</em> ptr）
-这种指针类型表示 指针本身是常量，即指针的值（即它指向的地址）不可修改，但是指针指向的 整型数据 是可以修改的。</li>
-</ol>
-<pre><code>int a = 10;
-int b = 20;
-const int *ptr = &amp;a; // 或者int const *ptr = &amp;a;
-*ptr = 15; // OK，指向的值可以修改
-ptr = &amp;b; // 错误，不能修改指针的地址(指针本身是常量)
-</code></pre>
-<ol>
-<li>指向常量整型的指针（int* const ptr）
+<li>指向整型常量的指针（<code>const int *ptr</code> 或 <code>int const *ptr</code>）
 这种指针类型表示 指针指向的数据是常量，即指针指向的 整型数据不可修改，但是指针本身可以修改，使其指向不同的地址。</li>
 </ol>
 <pre><code>int a = 10;
 int b = 20;
-int* const ptr = &amp;a;
+int const *ptr = &amp;a; // 或者 const int *ptr = &amp;a;
 *ptr = 15; // 错误，不能修改指向的数据
 ptr = &amp;b; // 正确，指针本身可以修改
+</code></pre>
+<ol>
+<li>指向整型的常量指针（int *const ptr）
+这种指针类型表示 指针本身是常量，即指针的值（即它指向的地址）不可修改，但是指针指向的 整型数据 是可以修改的。</li>
+</ol>
+<pre><code>int a = 10;
+int b = 20;
+int *const ptr = &amp;a; *ptr = 15; // OK，指向的值可以修改
+ptr = &amp;b; // 错误，不能修改指针的地址(指针本身是常量)
 </code></pre>
 <ol>
 <li>两者结合使用（const int<em>const ptr 或 int const</em> const ptr）
@@ -1871,7 +1870,7 @@ int *p1,*p2;
 <p>重新使用计数器：</p>
 <pre><code>void try3()
 {
-  for( i = 0; p1 = x, p2 = y; i &lt; SIZE; i++)
+  for( i = 0, p1 = x, p2 = y; i &lt; SIZE; i++)
   {
     *p1++ = *p2++;
   }
@@ -1883,7 +1882,7 @@ int *p1,*p2;
   register int *p1, *p2;
   register int i;
   
-  for( i = 0;p1 = x, p2 = y;i &lt; SIZE; i++)
+  for( i = 0,p1 = x, p2 = y;i &lt; SIZE; i++)
     *p1++ = *p2++;
 }
 </code></pre>
@@ -2051,10 +2050,10 @@ int lookup_keyword( char const* const desired_word,
 <li><code>sizeof(array)</code>返回的是整个数组所占用的字节而不是一个指针所占用的字节。</li>
 <li>&amp;array 和 array 指向的地址相同，但是&amp;array的类型为<code>int (*)[]</code>而array的类型为<code>int*</code></li>
 <li>其他使用数组名的地方数组名都是指向数组第一个元素的指针</li>
-<li><code>数组地址(类似于&amp;array[1][2]) = 数组基地址 + (行索引 * 每行大小) + (列索引 * 每行大小)</code></li>
+<li><code>数组地址(类似于&amp;array[1][2]) = 数组基地址 + (行索引 * 每行总大小) + (列索引 * 单个元素大小)</code></li>
 </ol>
-<p><code>地址 = 基地址 + (行索引 * 列数 * 元素大小) + (列索引 * 元素大小)</code></p>
-<p>假如<code>int array[4][2]</code>,int大小为2,array的地址为0x1000，则 &amp;array[1][2] = <code>0x1000 + (1 * 8) + (2 * 4) == 0x1016</code></p>
+<p><code>地址 = 基地址 + ((行索引 * 一行元素个数) + 列索引) * sizeof(元素类型)</code></p>
+<p>假如<code>int array[4][2]</code>,int大小为2,array的地址为0x1000，则 &amp;array[1][2] = <code>0x1000 + (2 * 2) + (2 * 2) == 0x1008</code></p>
 <h1>💝 字符串、字符和字节</h1>
 <ul>
 <li>字符串是一种重要的数据类型，但是C语言并没有显式的字符串数据类型，因为字符串以字符串常量的形式出现或者存储于字符数组中。</li>

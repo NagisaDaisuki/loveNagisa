@@ -896,24 +896,23 @@ int *const pci;
 &lt;hr /&gt;
 &lt;p&gt;在 C 语言中，“指向整型的常量指针”和“指向常量整型的指针”是两个非常常见的概念，它们在语法和使用上有所不同。下面我会分别讲解这两者的含义：&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;指向整型的常量指针（const int&lt;em&gt;ptr 或 int const&lt;/em&gt; ptr）
-这种指针类型表示 指针本身是常量，即指针的值（即它指向的地址）不可修改，但是指针指向的 整型数据 是可以修改的。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;pre&gt;&lt;code&gt;int a = 10;
-int b = 20;
-const int *ptr = &amp;amp;a; // 或者int const *ptr = &amp;amp;a;
-*ptr = 15; // OK，指向的值可以修改
-ptr = &amp;amp;b; // 错误，不能修改指针的地址(指针本身是常量)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;ol&gt;
-&lt;li&gt;指向常量整型的指针（int* const ptr）
+&lt;li&gt;指向整型常量的指针（&lt;code&gt;const int *ptr&lt;/code&gt; 或 &lt;code&gt;int const *ptr&lt;/code&gt;）
 这种指针类型表示 指针指向的数据是常量，即指针指向的 整型数据不可修改，但是指针本身可以修改，使其指向不同的地址。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;pre&gt;&lt;code&gt;int a = 10;
 int b = 20;
-int* const ptr = &amp;amp;a;
+int const *ptr = &amp;amp;a; // 或者 const int *ptr = &amp;amp;a;
 *ptr = 15; // 错误，不能修改指向的数据
 ptr = &amp;amp;b; // 正确，指针本身可以修改
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol&gt;
+&lt;li&gt;指向整型的常量指针（int *const ptr）
+这种指针类型表示 指针本身是常量，即指针的值（即它指向的地址）不可修改，但是指针指向的 整型数据 是可以修改的。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;int a = 10;
+int b = 20;
+int *const ptr = &amp;amp;a; *ptr = 15; // OK，指向的值可以修改
+ptr = &amp;amp;b; // 错误，不能修改指针的地址(指针本身是常量)
 &lt;/code&gt;&lt;/pre&gt;
 &lt;ol&gt;
 &lt;li&gt;两者结合使用（const int&lt;em&gt;const ptr 或 int const&lt;/em&gt; const ptr）
@@ -1842,7 +1841,7 @@ int *p1,*p2;
 &lt;p&gt;重新使用计数器：&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;void try3()
 {
-  for( i = 0; p1 = x, p2 = y; i &amp;lt; SIZE; i++)
+  for( i = 0, p1 = x, p2 = y; i &amp;lt; SIZE; i++)
   {
     *p1++ = *p2++;
   }
@@ -1854,7 +1853,7 @@ int *p1,*p2;
   register int *p1, *p2;
   register int i;
   
-  for( i = 0;p1 = x, p2 = y;i &amp;lt; SIZE; i++)
+  for( i = 0,p1 = x, p2 = y;i &amp;lt; SIZE; i++)
     *p1++ = *p2++;
 }
 &lt;/code&gt;&lt;/pre&gt;
@@ -2022,10 +2021,10 @@ int lookup_keyword( char const* const desired_word,
 &lt;li&gt;&lt;code&gt;sizeof(array)&lt;/code&gt;返回的是整个数组所占用的字节而不是一个指针所占用的字节。&lt;/li&gt;
 &lt;li&gt;&amp;amp;array 和 array 指向的地址相同，但是&amp;amp;array的类型为&lt;code&gt;int (*)[]&lt;/code&gt;而array的类型为&lt;code&gt;int*&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;其他使用数组名的地方数组名都是指向数组第一个元素的指针&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;数组地址(类似于&amp;amp;array[1][2]) = 数组基地址 + (行索引 * 每行大小) + (列索引 * 每行大小)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;数组地址(类似于&amp;amp;array[1][2]) = 数组基地址 + (行索引 * 每行总大小) + (列索引 * 单个元素大小)&lt;/code&gt;&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;code&gt;地址 = 基地址 + (行索引 * 列数 * 元素大小) + (列索引 * 元素大小)&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;假如&lt;code&gt;int array[4][2]&lt;/code&gt;,int大小为2,array的地址为0x1000，则 &amp;amp;array[1][2] = &lt;code&gt;0x1000 + (1 * 8) + (2 * 4) == 0x1016&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;地址 = 基地址 + ((行索引 * 一行元素个数) + 列索引) * sizeof(元素类型)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;假如&lt;code&gt;int array[4][2]&lt;/code&gt;,int大小为2,array的地址为0x1000，则 &amp;amp;array[1][2] = &lt;code&gt;0x1000 + (2 * 2) + (2 * 2) == 0x1008&lt;/code&gt;&lt;/p&gt;
 &lt;h1&gt;💝 字符串、字符和字节&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;字符串是一种重要的数据类型，但是C语言并没有显式的字符串数据类型，因为字符串以字符串常量的形式出现或者存储于字符数组中。&lt;/li&gt;

@@ -294,26 +294,25 @@ int *const pci;
 
 在 C 语言中，“指向整型的常量指针”和“指向常量整型的指针”是两个非常常见的概念，它们在语法和使用上有所不同。下面我会分别讲解这两者的含义：
 
-1. 指向整型的常量指针（const int*ptr 或 int const* ptr）
-这种指针类型表示 指针本身是常量，即指针的值（即它指向的地址）不可修改，但是指针指向的 整型数据 是可以修改的。
-
-~~~
-int a = 10;
-int b = 20;
-const int *ptr = &a; // 或者int const *ptr = &a;
-*ptr = 15; // OK，指向的值可以修改
-ptr = &b; // 错误，不能修改指针的地址(指针本身是常量)
-~~~
-
-2. 指向常量整型的指针（int* const ptr）
+1. 指向整型常量的指针（`const int *ptr` 或 `int const *ptr`）
 这种指针类型表示 指针指向的数据是常量，即指针指向的 整型数据不可修改，但是指针本身可以修改，使其指向不同的地址。
 
 ~~~
 int a = 10;
 int b = 20;
-int* const ptr = &a;
+int const *ptr = &a; // 或者 const int *ptr = &a;
 *ptr = 15; // 错误，不能修改指向的数据
 ptr = &b; // 正确，指针本身可以修改
+~~~
+
+2. 指向整型的常量指针（int *const ptr）
+这种指针类型表示 指针本身是常量，即指针的值（即它指向的地址）不可修改，但是指针指向的 整型数据 是可以修改的。
+
+~~~
+int a = 10;
+int b = 20;
+int *const ptr = &a; *ptr = 15; // OK，指向的值可以修改
+ptr = &b; // 错误，不能修改指针的地址(指针本身是常量)
 ~~~
 
 3. 两者结合使用（const int*const ptr 或 int const* const ptr）
@@ -1322,7 +1321,7 @@ void try2()
 ~~~shell
 void try3()
 {
-  for( i = 0; p1 = x, p2 = y; i < SIZE; i++)
+  for( i = 0, p1 = x, p2 = y; i < SIZE; i++)
   {
     *p1++ = *p2++;
   }
@@ -1337,7 +1336,7 @@ void try4()
   register int *p1, *p2;
   register int i;
   
-  for( i = 0;p1 = x, p2 = y;i < SIZE; i++)
+  for( i = 0,p1 = x, p2 = y;i < SIZE; i++)
     *p1++ = *p2++;
 }
 ~~~
@@ -1544,11 +1543,11 @@ int lookup_keyword( char const* const desired_word,
 1. `sizeof(array)`返回的是整个数组所占用的字节而不是一个指针所占用的字节。
 2. &array 和 array 指向的地址相同，但是&array的类型为`int (*)[]`而array的类型为`int*`
 3. 其他使用数组名的地方数组名都是指向数组第一个元素的指针
-4. `数组地址(类似于&array[1][2]) = 数组基地址 + (行索引 * 每行大小) + (列索引 * 每行大小)`
+4. `数组地址(类似于&array[1][2]) = 数组基地址 + (行索引 * 每行总大小) + (列索引 * 单个元素大小)`
 
-`地址 = 基地址 + (行索引 * 列数 * 元素大小) + (列索引 * 元素大小)`
+`地址 = 基地址 + ((行索引 * 一行元素个数) + 列索引) * sizeof(元素类型)`
 
-假如`int array[4][2]`,int大小为2,array的地址为0x1000，则 &array[1][2] = `0x1000 + (1 * 8) + (2 * 4) == 0x1016`
+假如`int array[4][2]`,int大小为2,array的地址为0x1000，则 &array[1][2] = `0x1000 + (2 * 2) + (2 * 2) == 0x1008`
 
 # 💝 字符串、字符和字节
 
